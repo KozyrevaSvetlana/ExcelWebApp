@@ -11,7 +11,7 @@ namespace PersonDb.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string City { get; set; }
-        public GenderEnum Gender { get; set; }
+        public int Gender { get; set; }
         public int Age { get; set; }
     }
 }

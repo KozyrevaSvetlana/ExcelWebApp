@@ -8,13 +8,13 @@ namespace PersonDb
 
         public static List<Person> GeneradeRandomPersons(int count)
         {
-            var persons = new List<Person>();
+            var persons = new List<Person>(count);
             for (int i = 0; i < count; i++)
             {
                 int gender = random.Next(0, 2);
                 var person = new Person();
                 person.Id = Guid.NewGuid();
-                person.Gender = (GenderEnum)gender;
+                person.Gender = gender;
                 if (gender == 0)
                 {
                     person.Name = namesMale[random.Next(0, namesMale.Count())];
@@ -25,6 +25,7 @@ namespace PersonDb
                 }
                 person.City = cities[random.Next(0, cities.Count())];
                 person.Age = random.Next(18, 80);
+
                 persons.Add(person);
             }
             return persons;

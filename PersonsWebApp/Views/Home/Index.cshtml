@@ -1,8 +1,10 @@
-﻿@model List<PersonViewModel>
+﻿@model IEnumerable<PersonViewModel>
 <div class="text-center">
     <h1 class="display-4">Hello World</h1>
     @foreach (var item in Model)
     {
-        
+        @item.Name
+        @item.City
+        @item.Age
     }
 </div>

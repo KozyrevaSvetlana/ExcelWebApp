@@ -1,13 +1,15 @@
 ﻿using PersonDb.Models;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PersonDb.Repositories
 {
     public class DatabaseContext : DbContext
     {
         public DbSet<Person> Persons { get; set; }
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) => Database.EnsureCreated();
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

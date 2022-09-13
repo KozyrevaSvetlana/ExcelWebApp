@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PersonDb.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersonsWebApp.Models
 {
@@ -10,7 +11,7 @@ namespace PersonsWebApp.Models
         [Required(ErrorMessage = "Укажите город")]
         public string City { get; set; }
         [Required(ErrorMessage = "Укажите пол")]
-        public char Gender { get; set; }
+        public string Gender { get; set; }
         [Required(ErrorMessage = "Укажите возраст")]
         public int Age { get; set; }
     }

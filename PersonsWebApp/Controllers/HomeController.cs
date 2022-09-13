@@ -15,7 +15,7 @@ namespace PersonsWebApp.Controllers
         }
         public IActionResult Index()
         {
-            var personsDB = persons.AllPersons.ToList();
+            var personsDB = persons.AllPersons;
             var personsVM = MappingProfile.MappingPersonDBToPersonVM(personsDB);
             return View(personsVM);
         }

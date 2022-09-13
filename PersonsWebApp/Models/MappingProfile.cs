@@ -4,9 +4,9 @@ namespace PersonsWebApp.Models
 {
     public static class MappingProfile
     {
-        public static List<PersonViewModel> MappingPersonDBToPersonVM(List<Person> personsDB)
+        public static List<PersonViewModel> MappingPersonDBToPersonVM(IEnumerable<Person> personsDB)
         {
-            var persons = new List<PersonViewModel>(personsDB.Count());
+            var persons = new List<PersonViewModel>();
             foreach (var personDB in personsDB)
             {
                 persons.Add(new PersonViewModel()
@@ -14,7 +14,6 @@ namespace PersonsWebApp.Models
                     Id = personDB.Id,
                     Name = personDB.Name,
                     City=personDB.City,
-                    Gender =personDB.Gender,
                     Age =personDB.Age
                 });
             }
