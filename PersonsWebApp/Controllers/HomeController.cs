@@ -1,9 +1,8 @@
-﻿using System.IO;
-using ClosedXML.Excel;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PersonDb.InterFaces;
 using PersonsWebApp.Models;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace PersonsWebApp.Controllers
 {
@@ -18,6 +17,9 @@ namespace PersonsWebApp.Controllers
         {
             var personsDB = await persons.GetAllPersonsAsync();
             var personsVM = Helpers.MappingPersonDBToPersonVM(personsDB);
+            var myChart = new Chart();
+            myChart.AddAnnotation("Пол");
+            ViewData["myChart"] = myChart;
             return View(personsVM);
         }
         [HttpPost]
