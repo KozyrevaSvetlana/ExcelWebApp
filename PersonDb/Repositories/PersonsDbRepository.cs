@@ -1,4 +1,5 @@
-﻿using PersonDb.InterFaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonDb.InterFaces;
 using PersonDb.Models;
 
 namespace PersonDb.Repositories
@@ -14,23 +15,18 @@ namespace PersonDb.Repositories
         {
         }
 
-        public IEnumerable<Person> AllPersons
+        public async Task<IEnumerable<Person>> GetAllPersonsAsync()
         {
-            get
-            {
-                return databaseContext.Persons.ToList();
-            }
+                return await databaseContext.Persons.ToListAsync();
         }
 
-        public void Add(Person newPerson)
+        public async Task AddAsync(IEnumerable<Person> persons)
         {
-            databaseContext.Persons.Add(newPerson);
-            databaseContext.SaveChanges();
+            await databaseContext.Persons.AddRangeAsync(persons);
+            await databaseContext.SaveChangesAsync();
         }
 
-        public Person GetPersonById(Guid id)
-        {
-            return databaseContext.Persons.FirstOrDefault(p => p.Id == id);
-        }
+        public async Task<Person> GetPersonByIdAsync(Guid id)
+            => await databaseContext.Persons.FirstOrDefaultAsync(p => p.Id == id);
     }
 }

@@ -4,29 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using PersonDb.InterFaces;
 using PersonsWebApp.Models;
 using System.Diagnostics;
-using System.Web;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System.Drawing.Drawing2D;
-using ExcelDataReader;
-using Microsoft.Win32;
 
 namespace PersonsWebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IPersonsRepository persons;
-        IWebHostEnvironment appEnvironment;
-        public HomeController(IPersonsRepository persons, IWebHostEnvironment appEnvironment)
+        public HomeController(IPersonsRepository persons)
         {
             this.persons = persons;
-            this.appEnvironment = appEnvironment;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var personsDB = persons.AllPersons;
-            var personsVM = MappingProfile.MappingPersonDBToPersonVM(personsDB);
+            var personsDB = await persons.GetAllPersonsAsync();
+            var personsVM = Helpers.MappingPersonDBToPersonVM(personsDB);
             return View(personsVM);
         }
         [HttpPost]
@@ -39,34 +30,18 @@ namespace PersonsWebApp.Controllers
                 using (var stream = new MemoryStream())
                 {
                     uploadedFile.CopyTo(stream);
-                    stream.Position = 1;
-                    try
-                    {
-                        using (var reader = ExcelReaderFactory.CreateReader(stream))
-                        {
-                            while (reader.Read())
-                            {
-                                newPersons.Add(new PersonViewModel
-                                {
-                                    Name = reader.GetValue(0).ToString(),
-                                    City = reader.GetValue(1).ToString(),
-                                    Gender = reader.GetValue(2).ToString(),
-                                    Age = Int32.Parse(reader.GetValue(3).ToString())
-                                });
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError("", "Неверные данные");
-                        var personsDB = persons.AllPersons;
-                        var personsVM = MappingProfile.MappingPersonDBToPersonVM(personsDB);
-                        return View("Index", personsVM);
-                    }
+                    Helpers.TrySafeFromExcel(uploadedFile, ModelState, newPersons);
                 }
-                return Ok(newPersons);
+                if (ModelState.ErrorCount > 0)
+                {
+                    var personsDB = persons.GetAllPersonsAsync().Result;
+                    var personsVM = Helpers.MappingPersonDBToPersonVM(personsDB);
+                    return View("Index", personsVM);
+                }
+                var newPersonsDB = Helpers.MappingPersonVMToPersonDB(newPersons);
+                await persons.AddAsync(newPersonsDB);
+                return RedirectToAction("Index");
             }
-
             return RedirectToAction("Index");
         }
 
