@@ -1,10 +1,35 @@
 ﻿@model IEnumerable<PersonViewModel>
 <div class="text-center">
     <h1 class="display-4">Hello World</h1>
-    @foreach (var item in Model)
-    {
-        @item.Name
-        @item.City
-        @item.Age
-    }
+
+    <div asp-validation-summary="ModelOnly" style="font-size:20px;color:red;">
+    </div>
+            <h3>Выберите файл для загрузки</h3>
+        <form asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploadedFile" /><br>
+            <input type="submit" value="Загрузить" />
+        </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Город</th>
+                <th scope="col">Пол</th>
+                <th scope="col">Возраст</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model)
+            {
+                <tr>
+                    <th>@person.Name</th>
+                    <td>@person.City</td>
+                    <td>@person.Gender</td>
+                    <td>@person.Age</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
 </div>
