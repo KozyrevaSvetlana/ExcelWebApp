@@ -7,8 +7,11 @@
         <input type="file" name="uploadedFile" /><input type="submit" value="Загрузить" />
     </form>
 </div>
-<div id="chartContainer" style="width: 100%; height: 300px"></div>
-<table class="table table-striped">
+
+<table>
+    <tr>
+        <td width="50%">
+			<table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Имя</th>
@@ -29,6 +32,13 @@
         }
     </tbody>
 </table>
+        </td>
+        <td style="vertical-align:top">
+            <div id="chartContainer" style="width: 100%; height: 300px"></div>
+        </td>
+    </tr>
+</table>
+
     <script type="text/javascript">
 	var males = @ViewBag.Male;
 	var females = @ViewBag.Female;
