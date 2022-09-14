@@ -4,10 +4,10 @@
     <div asp-validation-summary="ModelOnly" style="font-size:20px;color:red;" />
     <h3>Выберите файл для загрузки</h3>
     <form asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
-        <input type="file" name="uploadedFile" /><br>
-        <input type="submit" value="Загрузить" />
+        <input type="file" name="uploadedFile" /><input type="submit" value="Загрузить" />
     </form>
 </div>
+<div id="chartContainer" style="width: 100%; height: 300px"></div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -16,16 +16,40 @@
             <th scope="col">Пол</th>
             <th scope="col">Возраст</th>
         </tr>
-        </thead>
-        <tbody>
-            @foreach (var person in Model)
-            {
-                <tr>
-                    <th>@person.Name</th>
-                    <td>@person.City</td>
-                    <td>@person.Gender</td>
-                    <td>@person.Age</td>
-                </tr>
-            }
-            </tbody>
-            </table>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <th>@person.Name</th>
+                <td>@person.City</td>
+                <td>@person.Gender</td>
+                <td>@person.Age</td>
+            </tr>
+        }
+    </tbody>
+</table>
+    <script type="text/javascript">
+	var males = @ViewBag.Male;
+	var females = @ViewBag.Female;
+	window.onload = function () {
+
+		var chart = new CanvasJS.Chart("chartContainer", {
+			animationEnabled: true,
+			title: {
+				text: "Пол"
+			},
+			data: [{
+				type: "pie",
+				startAngle: 240,
+				indexLabel: "{label} {y}",
+				dataPoints: [
+					{ y: males, label: "М" },
+					{ y: females, label: "Ж" },
+				]
+			}]
+		});
+		chart.render();
+
+	}
+    </script>

@@ -3,6 +3,8 @@ using PersonDb.InterFaces;
 using PersonsWebApp.Models;
 using System.Diagnostics;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using Newtonsoft.Json;
+using DocumentFormat.OpenXml.InkML;
 
 namespace PersonsWebApp.Controllers
 {
@@ -17,9 +19,20 @@ namespace PersonsWebApp.Controllers
         {
             var personsDB = await persons.GetAllPersonsAsync();
             var personsVM = Helpers.MappingPersonDBToPersonVM(personsDB);
-            var myChart = new Chart();
-            myChart.AddAnnotation("Пол");
-            ViewData["myChart"] = myChart;
+            var maleFemaleList = (from plane in personsVM
+                                  group plane by plane.Gender into grouppenPlanes
+                                  where grouppenPlanes.Count() > 1
+                                  select new Male
+                                  {
+                                      Gender = grouppenPlanes.Key,
+                                      Count = grouppenPlanes.Count()
+                                  })
+          .ToList();
+            JsonSerializerSettings _jsonSetting = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+            var male = maleFemaleList.FirstOrDefault(x=> x.Gender == "М")?.Count;
+            var female = maleFemaleList.FirstOrDefault(x => x.Gender == "Ж")?.Count;
+            ViewBag.Male = JsonConvert.SerializeObject(male, _jsonSetting);
+            ViewBag.Female = JsonConvert.SerializeObject(female, _jsonSetting);
             return View(personsVM);
         }
         [HttpPost]
